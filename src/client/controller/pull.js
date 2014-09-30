@@ -28,6 +28,36 @@ module.controller('PullCtrl', ['$scope', '$state', '$stateParams', '$HUB', '$RPC
             number: $stateParams.number
         });
 
+        // get statuses for latest commit
+        $HUB.call('statuses', 'get', {
+            user: $stateParams.user,
+            repo: $stateParams.repo,
+            sha: $scope.head
+        }, function(err, github_statuses) {
+            var statuses = {};
+            github_statuses.value.forEach(function(status) {
+                if(!(status.context in statuses)) {
+                    statuses[status.context] = status;
+                }
+            });
+            $scope.statuses = [];
+            for(var key in statuses) {
+                if(statuses[key].context !== 'code-review/review.ninja') {
+                    $scope.statuses.push(statuses[key]);
+                }
+            }
+
+            $scope.aggregatedStatus = 'success';
+            $scope.statuses.value.forEach(function(status) {
+                if($scope.aggregatedStatus === 'success' && status.state === 'pending') {
+                    $scope.aggregatedStatus = 'pending';
+                }
+                if(status.state === 'error') {
+                    $scope.aggregatedStatus = 'error';
+                }
+            });
+        });
+
         // get the tree (for the file browser)
         $scope.tree = $HUB.call('gitdata', 'getTree', {
             user: $stateParams.user,
