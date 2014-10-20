@@ -1,5 +1,5 @@
 var GitHubApi = require('github');
-var Keenio = require('./keen');
+var Keenio = require('./keenlogger');
 
 var keenio = new Keenio();
 
