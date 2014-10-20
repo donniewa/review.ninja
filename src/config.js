@@ -61,6 +61,13 @@ module.exports = {
             name: 'review.ninja'
         },
 
+        keen: {
+            projectid: process.env.KEEN_PROJECTID,
+            writekey: process.env.KEEN_WRITEKEY,
+            readkey: process.env.KEEN_READKEY,
+            masterkey: process.env.KEEN_MASTERKEY
+        },
+
         mongodb: {
             uri: process.env.MONGODB || process.env.MONGOLAB_URI
         },

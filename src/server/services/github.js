@@ -1,4 +1,8 @@
 var GitHubApi = require('github');
+var Keenio = require('./keen');
+
+var keenio = new Keenio();
+
 module.exports = {
 
     call: function(call, done) {
@@ -40,6 +44,7 @@ module.exports = {
         }
 
         github[obj][fun](arg, function(err, res) {
+            keenio.logevent(obj, fun, err, res);
 
             var meta = null;
 
