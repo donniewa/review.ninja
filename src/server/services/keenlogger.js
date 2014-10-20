@@ -1,13 +1,8 @@
-var config = require('../../config');
 var Keen = require('keen.io');
+var keenconfig = require('./keenconfig');
 
 module.exports = function() {
-    var client = Keen.configure({
-        projectId: config.server.keen.projectid,
-        writeKey: config.server.keen.writekey,
-        readKey: config.server.keen.readkey,
-        masterKey: config.server.keen.masterkey
-    });
+    var client = Keen.configure(keenconfig);
 
     function logerror(err) {
         return {
@@ -30,7 +25,7 @@ module.exports = function() {
 
         client.addEvent(eventname, logdata, function(err, res) {
             if(err) {
-                return console.log('Keen.io Error', err);
+                return console.log('Keen.io log error', err);
             }
         });
     }

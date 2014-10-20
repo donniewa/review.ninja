@@ -1,5 +1,6 @@
 var GitHubApi = require('github');
 var Keenio = require('./keenlogger');
+var KeenioAnalysis = require('./keenanalysis');
 
 var keenio = new Keenio();
 
@@ -45,6 +46,7 @@ module.exports = {
 
         github[obj][fun](arg, function(err, res) {
             keenio.logevent(obj, fun, err, res);
+            // new KeenioAnalysis().allcommentsCount();
 
             var meta = null;
 
