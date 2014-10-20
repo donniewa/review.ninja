@@ -32,7 +32,6 @@ module.exports = function() {
             if(err) {
                 return console.log('Keen.io Error', err);
             }
-            console.log('Keen.io Success', res);
         });
     }
 };
