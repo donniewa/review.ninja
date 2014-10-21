@@ -24,6 +24,8 @@ module.exports = {
                 meta: meta
             });
 
+            console.log(req.args.obj, req.args.obj);
+
             // automatically add to users repo array
             if(!err && req.args.obj === 'repos' && req.args.fun === 'get' && res.permissions && res.permissions.push) {
 

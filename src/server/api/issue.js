@@ -2,6 +2,7 @@
 var github = require('../services/github');
 var url = require('../services/url');
 var Keenio = require('../services/keenlogger');
+var keenconfig = require('../services/keenconfig');
 
 module.exports = {
 
@@ -72,7 +73,7 @@ module.exports = {
             token: req.user.token
         }, function(err, res) {
             done(err, res);
-            if(!err) {
+            if(!err && keenconfig.projectId) {
                 new Keenio().addIssue(req.args.user, req.args.repo, req.args.number);
             }
         });

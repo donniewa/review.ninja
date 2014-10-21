@@ -1,9 +1,7 @@
 var Keen = require('keen.io');
-var keenconfig = require('./keenconfig');
 var github = require('../services/github');
 
-module.exports = function() {
-    var client = Keen.configure(keenconfig);
+module.exports = function(client) {
     var prefix = 'dev90001';
 
     function addEvent(name, data) {
