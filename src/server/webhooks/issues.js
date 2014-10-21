@@ -133,7 +133,7 @@ module.exports = function(req, res) {
                             notification.sendmail('closed_issue', req.args.repository.owner.login, req.args.repository.name, req.args.repository.id, user.token, pull_request_number, args);
 
                             if(config.server.keen.projectId) {
-                                new Keenio().closeIssue(req.args.user, req.args.repo, req.args.number);
+                                new Keenio().log(req.args.user, req.args.repo, req.args.number, 'issue', 'close');
                             }
                         });
 

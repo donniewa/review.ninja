@@ -2,7 +2,7 @@ var Keen = require('keen.io');
 var github = require('../services/github');
 
 module.exports = function(client) {
-    var prefix = 'dev90001';
+    var prefix = 'dev90002';
 
     function addEvent(name, data) {
         client.addEvent(name.join(), data, function(err) {
@@ -37,7 +37,7 @@ module.exports = function(client) {
         });
     }
 
-    function logevent(user, repo, prid, object, action) {
+    this.log = function(user, repo, prid, object, action) {
         var data = {
             object: {
                 user: user,
@@ -53,32 +53,4 @@ module.exports = function(client) {
             addEvent([prefix, user, repo, object, action], data);
         });
     }
-
-    this.setStar = function(user, repo, prid) {
-        logevent(user, repo, prid, 'star', 'add');
-    };
-
-    this.removeStar = function(user, repo, prid) {
-        logevent(user, repo, prid, 'star', 'remove');
-    };
-
-    this.addIssue = function(user, repo, prid) {
-        logevent(user, repo, prid, 'issue', 'add');
-    };
-
-    this.closeIssue = function(user, repo, prid) {
-        logevent(user, repo, prid, 'issue', 'close');
-    };
-
-    this.createPullrequest = function(user, repo, prid) {
-        logevent(user, repo, prid, 'pull_request', 'create');
-    };
-
-    this.reopenPullrequest = function(user, repo, prid) {
-        logevent(user, repo, prid, 'pull_request', 'reopen');
-    };
-
-    this.closePullrequest = function(user, repo, prid) {
-        logevent(user, repo, prid, 'pull_request', 'close');
-    };
 };

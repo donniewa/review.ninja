@@ -61,7 +61,7 @@ module.exports = function(req, res) {
               );
 
               if(!err && config.server.keen.projectId) {
-                  new Keenio().createPullrequest(req.args.user, req.args.repo, req.args.number);
+                  new Keenio().log(req.args.user, req.args.repo, req.args.number, 'pull_request', 'create');
               }
           },
           synchronize: function() {
@@ -86,14 +86,14 @@ module.exports = function(req, res) {
                   io.emit(req.args.repository.owner.login + ':' + req.args.repository.name + ':pull-request-' + req.args.number + ':merged', req.args.number);
               }
               if(!err && config.server.keen.projectId) {
-                  new Keenio().closePullrequest(req.args.user, req.args.repo, req.args.number);
+                  new Keenio().log(req.args.user, req.args.repo, req.args.number, 'pull_request', 'close');
               }
           },
           reopened: function() {
               // a pull request you have reviewed has a been reopened
               // send messages to responsible users?
               if(!err && config.server.keen.projectId) {
-                  new Keenio().reopenPullrequest(req.args.user, req.args.repo, req.args.number);
+                  new Keenio().log(req.args.user, req.args.repo, req.args.number, 'pull_request', 'reopen');
               }
           }
       };

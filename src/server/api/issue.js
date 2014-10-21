@@ -74,7 +74,7 @@ module.exports = {
         }, function(err, res) {
             done(err, res);
             if(!err && config.server.keen.projectId) {
-                new Keenio().addIssue(req.args.user, req.args.repo, req.args.number);
+                new Keenio().log(req.args.user, req.args.repo, req.args.number, 'issue', 'add');
             }
         });
     }

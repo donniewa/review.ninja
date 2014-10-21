@@ -97,7 +97,7 @@ module.exports = {
 
                 done(err, star);
                 if(!err && config.server.keen.projectId) {
-                    new Keenio().setStar(req.args.user, req.args.repo, req.args.number);
+                    new Keenio().log(req.args.user, req.args.repo, req.args.number, 'star', 'add');
                 }
             });
 
@@ -149,7 +149,7 @@ module.exports = {
 
                 done(err, star);
                 if(!err && config.server.keen.projectId) {
-                    new Keenio().removeStar(req.args.user, req.args.repo, req.args.number);
+                    new Keenio().removeStar(req.args.user, req.args.repo, req.args.number, 'star', 'remove');
                 }
             });
         });
