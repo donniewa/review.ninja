@@ -145,6 +145,10 @@ module.exports = function(req, res) {
                 // udpate the status
                 // send email if pull req is open and unmerged
                 // (logic belongs in notification service)
+
+                if(config.server.keen.projectId) {
+                    new Keenio().log(req.args.user, req.args.repo, req.args.number, 'issue', 'reopened');
+                }
             }
         };
 
