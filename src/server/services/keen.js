@@ -52,5 +52,5 @@ module.exports = function(client) {
             data.pull_request = pull_request;
             addEvent([prefix, user, repo, object, action], data);
         });
-    }
+    };
 };
