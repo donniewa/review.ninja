@@ -2,10 +2,6 @@ var Keen = require('keen.io');
 var keenconfig = require('./keenconfig');
 var github = require('../services/github');
 
-Array.prototype.last = function() {
-    return this[this.length - 1];
-};
-
 module.exports = function() {
     var client = Keen.configure(keenconfig);
     var prefix = 'dev90001';
@@ -82,7 +78,6 @@ module.exports = function() {
             }
             data.pull_request = pull_request;
             addEvent([prefix, user, repo, 'issue', 'add'], data);
-        })
-    }
-
+        });
+    };
 };

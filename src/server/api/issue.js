@@ -71,10 +71,10 @@ module.exports = {
             },
             token: req.user.token
         }, function(err, res) {
+            done(err, res);
             if(!err) {
                 new Keenio().addIssue(req.args.user, req.args.repo, req.args.number);
             }
-            done(err, res);
         });
     }
 };

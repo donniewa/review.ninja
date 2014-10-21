@@ -47,8 +47,6 @@ module.exports = {
      ************************************************************************************************************/
 
     set: function(req, done) {
-        new Keenio().setStar(req.args.user, req.args.repo, req.args.number);
-
         github.call({
             obj: 'repos',
             fun: 'one',
@@ -98,6 +96,9 @@ module.exports = {
                 }
 
                 done(err, star);
+                if(!err) {
+                    new Keenio().setStar(req.args.user, req.args.repo, req.args.number);
+                }
             });
 
         });
@@ -112,8 +113,6 @@ module.exports = {
      ************************************************************************************************************/
 
     rmv: function(req, done) {
-        new Keenio().removeStar(req.args.user, req.args.repo, req.args.number);
-
         Star.findOne({
             sha: req.args.sha,
             user: req.user.id,
@@ -149,6 +148,9 @@ module.exports = {
                 }
 
                 done(err, star);
+                if(err) {
+                    new Keenio().removeStar(req.args.user, req.args.repo, req.args.number);
+                }
             });
         });
     }
