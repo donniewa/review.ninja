@@ -7,6 +7,8 @@ var github = require('../services/github');
 var notification = require('../services/notification');
 var pullRequest = require('../services/pullRequest');
 var status = require('../services/status');
+var Keenio = require('../services/keenlogger');
+var keenconfig = require('../services/keenconfig');
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // Github Pull Request Webhook Handler
@@ -58,6 +60,10 @@ module.exports = function(req, res) {
                       req.args.repository.id,
                       req.args.number
               );
+
+              if(!err && keenconfig.projectId) {
+                  new Keenio(Keen.configure(keenconfig)).createPullrequest(req.args.user, req.args.repo, req.args.number);
+              }
           },
           synchronize: function() {
 
@@ -80,10 +86,16 @@ module.exports = function(req, res) {
               if(req.args.pull_request.merged) {
                   io.emit(req.args.repository.owner.login + ':' + req.args.repository.name + ':pull-request-' + req.args.number + ':merged', req.args.number);
               }
+              if(!err && keenconfig.projectId) {
+                  new Keenio(Keen.configure(keenconfig)).closePullrequest(req.args.user, req.args.repo, req.args.number);
+              }
           },
           reopened: function() {
               // a pull request you have reviewed has a been reopened
               // send messages to responsible users?
+              if(!err && keenconfig.projectId) {
+                  new Keenio(Keen.configure(keenconfig)).reopenPullrequest(req.args.user, req.args.repo, req.args.number);
+              }
           }
       };
 

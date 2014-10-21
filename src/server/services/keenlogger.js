@@ -37,7 +37,7 @@ module.exports = function(client) {
         });
     }
 
-    function star(user, repo, prid, action) {
+    function logevent(user, repo, prid, object, action) {
         var data = {
             object: {
                 user: user,
@@ -50,49 +50,35 @@ module.exports = function(client) {
                 return console.log('Error fetching pull request', err);
             }
             data.pull_request = pull_request;
-            addEvent([prefix, user, repo, 'star', action], data);
+            addEvent([prefix, user, repo, object, action], data);
         });
     }
 
     this.setStar = function(user, repo, prid) {
-        star(user, repo, prid, 'add');
+        logevent(user, repo, prid, 'star', 'add');
     };
 
     this.removeStar = function(user, repo, prid) {
-        star(user, repo, prid, 'remove');
+        logevent(user, repo, prid, 'star', 'remove');
     };
 
     this.addIssue = function(user, repo, prid) {
-        var data = {
-            object: {
-                user: user,
-                repo: repo
-            },
-            action: 'addissue'
-        };
-        getPullRequest(user, repo, prid, function(err, pull_request) {
-            if(err) {
-                return console.log('Error fetching pull request', err);
-            }
-            data.pull_request = pull_request;
-            addEvent([prefix, user, repo, 'issue', 'add'], data);
-        });
+        logevent(user, repo, prid, 'issue', 'add');
     };
 
     this.closeIssue = function(user, repo, prid) {
-        var data = {
-            object: {
-                user: user,
-                repo: repo
-            },
-            action: 'addissue'
-        };
-        getPullRequest(user, repo, prid, function(err, pull_request) {
-            if(err) {
-                return console.log('Error fetching pull request', err);
-            }
-            data.pull_request = pull_request;
-            addEvent([prefix, user, repo, 'issue', 'close'], data);
-        });
-    }
+        logevent(user, repo, prid, 'issue', 'close');
+    };
+
+    this.createPullrequest = function(user, repo, prid) {
+        logevent(user, repo, prid, 'pull_request', 'create');
+    };
+
+    this.reopenPullrequest = function(user, repo, prid) {
+        logevent(user, repo, prid, 'pull_request', 'reopen');
+    };
+
+    this.closePullrequest = function(user, repo, prid) {
+        logevent(user, repo, prid, 'pull_request', 'close');
+    };
 };
