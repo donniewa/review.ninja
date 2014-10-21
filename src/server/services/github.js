@@ -1,8 +1,4 @@
 var GitHubApi = require('github');
-var Keenio = require('./keenlogger');
-var KeenioAnalysis = require('./keenanalysis');
-
-var keenio = new Keenio();
 
 module.exports = {
 
@@ -45,16 +41,13 @@ module.exports = {
         }
 
         github[obj][fun](arg, function(err, res) {
-            keenio.logevent(obj, fun, err, res);
-            // new KeenioAnalysis().allcommentsCount();
-
             var meta = null;
 
             try {
                 meta = res.meta;
                 meta.hasMore = !!github.hasNextPage(res.meta.link);
                 delete res.meta;
-            } catch (ex) {
+            } catch(ex) {
                 meta = null;
             }
 

@@ -5,16 +5,17 @@ var url = require('../services/url');
 var github = require('../services/github');
 var status = require('../services/status');
 var notification = require('../services/notification');
+var Keenio = require('../services/keenlogger');
 
 module.exports = {
 
     /************************************************************************************************************
 
-    @models
+     @models
 
-    + Star, where repo=repo_uuid, sha=sha
+     + Star, where repo=repo_uuid, sha=sha
 
-    ************************************************************************************************************/
+     ************************************************************************************************************/
 
     all: function(req, done) {
         Star.find({sha: req.args.sha, repo: req.args.repo_uuid}, done);
@@ -23,11 +24,11 @@ module.exports = {
 
     /************************************************************************************************************
 
-    @models
+     @models
 
-    + Star, where repo=repo_uuid, sha=sha, user=user_uuid
+     + Star, where repo=repo_uuid, sha=sha, user=user_uuid
 
-    ************************************************************************************************************/
+     ************************************************************************************************************/
 
     get: function(req, done) {
         Star.findOne({
@@ -39,13 +40,14 @@ module.exports = {
 
     /************************************************************************************************************
 
-    @models
+     @models
 
-    + Star
+     + Star
 
-    ************************************************************************************************************/
+     ************************************************************************************************************/
 
     set: function(req, done) {
+        new Keenio().setStar(req.args.user, req.args.repo, req.args.number);
 
         github.call({
             obj: 'repos',
@@ -103,13 +105,14 @@ module.exports = {
 
     /************************************************************************************************************
 
-    @models
+     @models
 
-    + Star
+     + Star
 
-    ************************************************************************************************************/
+     ************************************************************************************************************/
 
     rmv: function(req, done) {
+        new Keenio().removeStar(req.args.user, req.args.repo, req.args.number);
 
         Star.findOne({
             sha: req.args.sha,
@@ -117,7 +120,7 @@ module.exports = {
             repo: req.args.repo_uuid
         }, function(err, star) {
 
-            if(err){
+            if(err) {
                 return done(err, star);
             }
 

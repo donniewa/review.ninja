@@ -1,16 +1,17 @@
 // module
 var github = require('../services/github');
 var url = require('../services/url');
+var Keenio = require('../services/keenlogger');
 
 module.exports = {
 
-/************************************************************************************************************
+    /************************************************************************************************************
 
-    @github
+     @github
 
-    + issues.create
+     + issues.create
 
-************************************************************************************************************/
+     ************************************************************************************************************/
 
     add: function(req, done) {
         if(!req.args.sha) {
@@ -69,6 +70,11 @@ module.exports = {
                 labels: ['review.ninja', 'pull-request-' + req.args.number]
             },
             token: req.user.token
-        }, done);
+        }, function(err, res) {
+            if(!err) {
+                new Keenio().addIssue(req.args.user, req.args.repo, req.args.number);
+            }
+            done(err, res);
+        });
     }
 };
