@@ -6,7 +6,6 @@ var github = require('../services/github');
 var status = require('../services/status');
 var notification = require('../services/notification');
 var Keenio = require('../services/keenlogger');
-var keenconfig = require('../services/keenconfig');
 
 module.exports = {
 
@@ -97,7 +96,7 @@ module.exports = {
                 }
 
                 done(err, star);
-                if(!err && keenconfig.projectId) {
+                if(!err && config.server.keen.projectId) {
                     new Keenio().setStar(req.args.user, req.args.repo, req.args.number);
                 }
             });
@@ -149,8 +148,8 @@ module.exports = {
                 }
 
                 done(err, star);
-                if(!err && keenconfig.projectId) {
-                    new Keenio(Keen.configure(keenconfig)).removeStar(req.args.user, req.args.repo, req.args.number);
+                if(!err && config.server.keen.projectId) {
+                    new Keenio().removeStar(req.args.user, req.args.repo, req.args.number);
                 }
             });
         });

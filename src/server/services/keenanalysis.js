@@ -1,8 +1,8 @@
 var Keen = require('keen.io');
-var keenconfig = require('./keenconfig');
+var config = require('../../config');
 
 module.exports = function() {
-    var client = Keen.configure(keenconfig);
+    var client = Keen.configure(config.server.keen);
 
     this.allcommentsCount = function() {
         var count = new Keen.Query('count', {
