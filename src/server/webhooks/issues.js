@@ -7,7 +7,7 @@ var github = require('../services/github');
 var notification = require('../services/notification');
 var status = require('../services/status');
 var pullRequest = require('../services/pullRequest');
-var Keenio = require('../services/keenlogger');
+var Keenio = require('../services/keen');
 var config = require('../../config');
 
 

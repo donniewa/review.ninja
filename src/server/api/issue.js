@@ -1,7 +1,7 @@
 // module
 var github = require('../services/github');
 var url = require('../services/url');
-var Keenio = require('../services/keenlogger');
+var Keenio = require('../services/keen');
 var config = require('../../config');
 
 module.exports = {

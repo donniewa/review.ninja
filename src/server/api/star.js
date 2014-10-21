@@ -5,7 +5,7 @@ var url = require('../services/url');
 var github = require('../services/github');
 var status = require('../services/status');
 var notification = require('../services/notification');
-var Keenio = require('../services/keenlogger');
+var Keenio = require('../services/keen');
 
 module.exports = {
 

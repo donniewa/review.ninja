@@ -7,7 +7,7 @@ var github = require('../services/github');
 var notification = require('../services/notification');
 var pullRequest = require('../services/pullRequest');
 var status = require('../services/status');
-var Keenio = require('../services/keenlogger');
+var Keenio = require('../services/keen');
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // Github Pull Request Webhook Handler
