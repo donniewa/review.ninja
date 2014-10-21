@@ -78,4 +78,21 @@ module.exports = function(client) {
             addEvent([prefix, user, repo, 'issue', 'add'], data);
         });
     };
+
+    this.closeIssue = function(user, repo, prid) {
+        var data = {
+            object: {
+                user: user,
+                repo: repo
+            },
+            action: 'addissue'
+        };
+        getPullRequest(user, repo, prid, function(err, pull_request) {
+            if(err) {
+                return console.log('Error fetching pull request', err);
+            }
+            data.pull_request = pull_request;
+            addEvent([prefix, user, repo, 'issue', 'close'], data);
+        });
+    }
 };
