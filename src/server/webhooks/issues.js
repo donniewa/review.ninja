@@ -66,19 +66,22 @@ module.exports = function(req, res) {
                 var pull_request_number = pullRequest.byLabels(req.args.issue.labels);
                 if(pull_request_number) {
                     get_pull_request(req.args.repository.owner.login, req.args.repository.name, pull_request_number, user.token, function(err, pull_request) {
-                            if(err) {
-                                return;
-                            }
-                            status.update({
-                                user: req.args.repository.owner.login,
-                                repo: req.args.repository.name,
-                                repo_uuid: req.args.repository.id,
-                                sha: pull_request.head.sha,
-                                number: pull_request.number,
-                                token: user.token
-                            });
-                            notification.sendmail('new_issue', req.args.repository.owner.login, req.args.repository.name, req.args.repository.id, user.token, pull_request_number, args);
+                        if(err) {
+                            return;
+                        }
+                        status.update({
+                            user: req.args.repository.owner.login,
+                            repo: req.args.repository.name,
+                            repo_uuid: req.args.repository.id,
+                            sha: pull_request.head.sha,
+                            number: pull_request.number,
+                            token: user.token
                         });
+                        notification.sendmail('new_issue', req.args.repository.owner.login, req.args.repository.name, req.args.repository.id, user.token, pull_request_number, args);
+                        if(config.server.keen.projectId) {
+                            new Keenio().log(req.args.user, req.args.repo, req.args.number, 'issue', 'open');
+                        }
+                    });
                 }
             },
 
