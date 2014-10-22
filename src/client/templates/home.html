@@ -11,43 +11,37 @@
   </div>
 
 	<div class="col-md-6">
-    <h2>Repositories <i class="fa fa-plus-circle text-primary" ng-click="show=true; search();"></i></h2>
+    <h2>Repositories <i class="fa fa-plus-circle text-primary" ng-click="show=!show"></i></h2>
 
-    <div class="well well-sm search" ng-show="show">
+    <div class="well well-sm" ng-show="show">
       <form ng-submit="search()">
         <div class="form-group">
           <div class="input-group">
-            <input type="text" ng-change="reset()" ng-model="query" class="form-control" style="height:33px;" />
+            <div class="form-group has-feedback">
+              <input type="text" ng-model="query" placeholder="{{ user.value.login }}/" class="form-control" style="height:33px;" />
+              <i class="fa fa-lg fa-spinner fa-spin form-control-feedback" ng-show="searching.loading" style="top:0px;"></i>
+              <i class="fa fa-lg fa-times form-control-feedback" ng-show="!searching.loading && query" ng-click="reset()" style="top:0px;"></i>
+            </div>
             <span class="input-group-btn">
               <button class="btn btn-info" type="submit" ng-disabled="!query">Find Repository</button>
             </span>
           </div>
-          <!-- <span class="help-block" style="margin-top:1px;">
-            You can also try <strong>org/</strong> and <strong>org/repo</strong>
-          </span> -->
+          <span class="help-block" style="margin-top:1px;">
+            Type <em>username/</em> or <em>organization/</em> to find a repository
+          </span>
         </div>
 
         <div class="list-group" style="max-height:200px; overflow-y:scroll;" ng-show="results.length">
           <a href="" 
              class="list-group-item" 
              ng-class="{ active: active===repo }" 
-             ng-click="$parent.active=repo"
+             ng-click="$parent.active=repo; add(repo);"
              ng-repeat="repo in results | orderBy: 'full_name'">
             {{ repo.full_name }}
+            <i class="fa fa-lg fa-spinner fa-spin pull-right" ng-show="active===repo"></i>
           </a>
         </div>
       </form>
-
-      <i class="fa fa-2x fa-spinner fa-spin" ng-show="searching.loading || adding.loading" style="margin-left:5px;"></i>
-
-      <div class="pull-left" ng-show="user.meta['x-oauth-scopes'].split(', ').indexOf('repo') === -1">
-        <a class="btn btn-info" href="/auth/github?private=true" target="_self"><i class="fa fa-lock"></i> Enable private repos</a>
-      </div>
-      <div class="pull-right">
-        <button type="button" class="btn btn-info" ng-click="show=false; active=null;">Close</button>
-        <button type="button" class="btn btn-primary" ng-click="add(active)" ng-disabled="!active">Add repository</button>
-      </div>
-      <div style="clear:both;"></div>
     </div>
 
     <i class="fa fa-2x fa-spinner fa-spin center-block" ng-show="hasRepos && !repos.length"></i>

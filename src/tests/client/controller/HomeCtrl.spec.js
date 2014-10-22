@@ -32,7 +32,7 @@ describe('Home Controller', function() {
             login: 'login-3'
         }];
 
-        scope.query = 'query';
+        scope.query = 'user/repo';
 
         createCtrl = function() {
             return $controller('HomeCtrl', {
@@ -203,7 +203,7 @@ describe('Home Controller', function() {
 
         var repos = ['repo-1', 'repo-2'];
 
-        httpBackend.expect('POST', '/api/github/wrap','{"obj":"search","fun":"repos","arg":{"q":"query+in:name+fork:true+user:login"}}').respond({
+        httpBackend.expect('POST', '/api/github/wrap','{"obj":"search","fun":"repos","arg":{"q":"repo+in:name+fork:true+user:user"}}').respond({
             data: 'repos'
         });
 

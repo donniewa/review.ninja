@@ -16,21 +16,18 @@ var config = require('../../config');
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 module.exports = function(req, res) {
-
     //
     // Helper functions
     //
-
-    function get_issues(user, repo, pull_request_number, token, done) {
-
+    function get_issues(user, repo, number, token, done) {
         github.call({
             obj: 'issues',
             fun: 'repoIssues',
             arg: {
                 user: user,
                 repo: repo,
-                labels: 'review.ninja, ' + 'pull-request-' + pull_request_number,
-                state:'open'
+                labels: 'pull-request-' + number,
+                state: 'open'
             },
             token: token
         }, done);
@@ -38,14 +35,13 @@ module.exports = function(req, res) {
 
 
     function get_pull_request(user, repo, number, token, done) {
-
         github.call({
-            obj:'pullRequests',
-            fun:'get',
+            obj: 'pullRequests',
+            fun: 'get',
             arg: {
                 user: user,
                 repo: repo,
-                number:number
+                number: number
             }
         }, done);
     }
@@ -62,65 +58,17 @@ module.exports = function(req, res) {
     };
 
     User.findOne({ _id: req.params.id }, function(err, user) {
-
         if(!user) {
             return res.end();
         }
-
         var actions = {
             opened: function() {
-
                 var pull_request_number = pullRequest.byLabels(req.args.issue.labels);
-
-                if( pull_request_number ) {
-                    get_pull_request(req.args.repository.owner.login,
-                                     req.args.repository.name,
-                                     pull_request_number,
-                                     user.token,
-                                     function(err, pull_request) {
-
-                        if(err) {
-                            return;
-                        }
-
-                        status.update({
-                            user: req.args.repository.owner.login,
-                            repo: req.args.repository.name,
-                            repo_uuid: req.args.repository.id,
-                            sha: pull_request.head.sha,
-                            number: pull_request.number,
-                            token: user.token
-                        });
-
-                        notification.sendmail('new_issue', req.args.repository.owner.login, req.args.repository.name, req.args.repository.id, user.token, pull_request_number, args);
-                    });
-                }
-
-            },
-
-            closed: function() {
-
-                var pull_request_number = pullRequest.byLabels(req.args.issue.labels);
-
-                if( pull_request_number ) {
-
-                    get_issues(req.args.repository.owner.login, req.args.repository.name, pull_request_number, user.token, function(err, issues){
-
-                        if(err) {
-                            return;
-                        }
-
-                        if(issues.length) {
-                            return;
-                        }
-
-
-                        get_pull_request(req.args.repository.owner.login, req.args.repository.name, pull_request_number, user.token, function(err, pull_request) {
-
-                            if(err){
+                if(pull_request_number) {
+                    get_pull_request(req.args.repository.owner.login, req.args.repository.name, pull_request_number, user.token, function(err, pull_request) {
+                            if(err) {
                                 return;
                             }
-
                             status.update({
                                 user: req.args.repository.owner.login,
                                 repo: req.args.repository.name,
@@ -129,7 +77,33 @@ module.exports = function(req, res) {
                                 number: pull_request.number,
                                 token: user.token
                             });
+                            notification.sendmail('new_issue', req.args.repository.owner.login, req.args.repository.name, req.args.repository.id, user.token, pull_request_number, args);
+                        });
+                }
+            },
 
+            closed: function() {
+                var pull_request_number = pullRequest.byLabels(req.args.issue.labels);
+                if(pull_request_number) {
+                    get_issues(req.args.repository.owner.login, req.args.repository.name, pull_request_number, user.token, function(err, issues) {
+                        if(err) {
+                            return;
+                        }
+                        if(issues.length) {
+                            return;
+                        }
+                        get_pull_request(req.args.repository.owner.login, req.args.repository.name, pull_request_number, user.token, function(err, pull_request) {
+                            if(err) {
+                                return;
+                            }
+                            status.update({
+                                user: req.args.repository.owner.login,
+                                repo: req.args.repository.name,
+                                repo_uuid: req.args.repository.id,
+                                sha: pull_request.head.sha,
+                                number: pull_request.number,
+                                token: user.token
+                            });
                             notification.sendmail('closed_issue', req.args.repository.owner.login, req.args.repository.name, req.args.repository.id, user.token, pull_request_number, args);
 
                             if(config.server.keen.projectId) {
@@ -152,10 +126,9 @@ module.exports = function(req, res) {
             }
         };
 
-        if (actions[req.args.action]) {
+        if(actions[req.args.action]) {
             actions[req.args.action]();
         }
-
         res.end();
     });
 };

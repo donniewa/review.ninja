@@ -65,10 +65,10 @@ module.controller('HomeCtrl', ['$rootScope', '$scope', '$state', '$stateParams',
             // clear results
             $scope.results = [];
 
-            // set up query
-            var query = $scope.query ? $scope.query.split('/') : [''];
-            query = (query[1]!==undefined ? query[1] : query[0]) + '+in:name+fork:true+user:' + (query[1]!==undefined ? query[0] : $rootScope.user.value.login);
-
+            // get query
+            var query = $scope.query.split('/');
+            query = (query[1] || '') + '+in:name+fork:true+user:' + query[0];
+            
             $scope.searching = $HUB.wrap('search', 'repos', {
                 q: query
             }, function(err, repos) {
@@ -79,9 +79,8 @@ module.controller('HomeCtrl', ['$rootScope', '$scope', '$state', '$stateParams',
         };
 
         $scope.reset = function() {
-            if(!$scope.query) {
-                $scope.search();
-            }
+            $scope.query = null;
+            $scope.results = [];
         };
     }
 ]);

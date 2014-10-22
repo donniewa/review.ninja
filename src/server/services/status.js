@@ -16,7 +16,7 @@ module.exports = {
                     user: args.user,
                     repo: args.repo,
                     state: 'open',
-                    labels: 'review.ninja, pull-request-' + args.number
+                    labels: 'pull-request-' + args.number
                 },
                 token: args.token
             }, function(err, issues) {

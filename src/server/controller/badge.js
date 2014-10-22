@@ -29,7 +29,7 @@ router.all('/:repoId/pull/:number/badge', function(req, res) {
             arg: {
                 user: githubRepo.owner.login,
                 repo: githubRepo.name,
-                labels: 'review.ninja,pull-request-' + req.params.number,
+                labels: 'pull-request-' + req.params.number,
                 state: 'open'
             }
         }, function(err, issues) {
