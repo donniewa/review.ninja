@@ -1,6 +1,9 @@
 // modules
 var async = require('async');
 var github = require('../services/github');
+var sugar = require('array-sugar');
+// models
+var User = require('mongoose').model('User');
 
 module.exports = {
 
@@ -8,24 +11,31 @@ module.exports = {
 
         var repos = [];
 
-        async.each(results.items, function(result, call) {
+        User.findOne({ uuid: req.user.id }, function(err, user) {
 
-            github.call({
-                obj: 'repos',
-                fun: 'one',
-                arg: { id: result.id },
-                token: req.user.token
-            }, function(err, repo) {
+            if(err || !user) {
+                return done(null, repos);
+            }
 
-                if(repo && repo.permissions.push) {
-                    repos.push(repo);
-                }
+            async.each(results.items, function(result, call) {
 
-                return call(null);
+                github.call({
+                    obj: 'repos',
+                    fun: 'one',
+                    arg: { id: result.id },
+                    token: req.user.token
+                }, function(err, repo) {
+
+                    if(repo && repo.permissions.push && !user.repos.contains(repo.id)) {
+                        repos.push(repo);
+                    }
+
+                    return call(null);
+                });
+
+            }, function() {
+                done(null, repos);
             });
-
-        }, function() {
-            done(null, repos);
         });
     }
 };

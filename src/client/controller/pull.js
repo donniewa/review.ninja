@@ -6,8 +6,8 @@
 // resolve: repo, pull
 // *****************************************************
 
-module.controller('PullCtrl', ['$scope', '$state', '$stateParams', '$HUB', '$RPC', 'repo', 'pull', 'socket', 'Pull',
-    function($scope, $state, $stateParams, $HUB, $RPC, repo, pull, socket, Pull) {
+module.controller('PullCtrl', ['$scope', '$state', '$stateParams', '$modal', '$HUB', '$RPC', 'repo', 'pull', 'socket', 'Pull',
+    function($scope, $state, $stateParams, $modal, $HUB, $RPC, repo, pull, socket, Pull) {
 
         // get the repo
         $scope.repo = repo.value;
@@ -195,6 +195,13 @@ module.controller('PullCtrl', ['$scope', '$state', '$stateParams', '$HUB', '$RPC
                     }
                 });
             }
+        };
+
+        $scope.badge = function() {
+            var modal = $modal.open({
+                templateUrl: '/modals/templates/badge.html',
+                controller: 'BadgeCtrl'
+            });
         };
 
         //

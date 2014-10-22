@@ -6,8 +6,8 @@
 // resolve: repo
 // *****************************************************
 
-module.controller('RepoCtrl', ['$scope', '$stateParams', '$HUB', '$RPC', '$modal', 'repo', 'Pull',
-    function($scope, $stateParams, $HUB, $RPC, $modal, repo, Pull) {
+module.controller('RepoCtrl', ['$scope', '$stateParams', '$modal', '$HUB', '$RPC', 'repo', 'Pull',
+    function($scope, $stateParams, $modal, $HUB, $RPC, repo, Pull) {
 
         // get the repo
         $scope.repo = repo;
@@ -46,5 +46,16 @@ module.controller('RepoCtrl', ['$scope', '$stateParams', '$HUB', '$RPC', '$modal
                 });
             }
         });
+
+        //
+        // Actions
+        //
+
+        $scope.badge = function() {
+            var modal = $modal.open({
+                templateUrl: '/modals/templates/badge.html',
+                controller: 'BadgeCtrl'
+            });
+        };
     }
 ]);

@@ -37,13 +37,16 @@ module.controller('HomeCtrl', ['$rootScope', '$scope', '$state', '$stateParams',
         //
 
         $scope.add = function(repo) {
-            $scope.adding = $RPC.call('user', 'addRepo', {
+            $RPC.call('user', 'addRepo', {
                 user: repo.owner.login,
                 repo: repo.name,
                 repo_uuid: repo.id
             }, function(err) {
-                if (!err) {
-                    $state.go('repo.master', {user: repo.owner.login, repo:repo.name});
+                $scope.active = null;
+                $scope.hasRepos = true;
+                if (!err && $scope.repos.indexOf(repo)<0) {
+                    repo.ninja = true;
+                    $scope.repos.push(repo);
                 }
             });
         };

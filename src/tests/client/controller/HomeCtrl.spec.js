@@ -102,6 +102,7 @@ describe('Home Controller', function() {
 
         httpBackend.expect('POST', '/api/github/call', '{"obj":"repos","fun":"one","arg":{"id":21620444}}').respond({
             data: {
+                id: 21620444,
                 name: 'repo-1',
                 user: 'me',
                 ninja: true,
@@ -114,18 +115,9 @@ describe('Home Controller', function() {
         scope.add({owner:{login:'login'}, name: 'name', id: '1234'});
 
         httpBackend.expect('POST', '/api/user/addRepo').respond(null);
-
-        httpBackend.expect('POST', '/api/github/call', '{"obj":"repos","fun":"get","arg":{"user":"login","repo":"name"}}').respond({
-            data: {
-                name: 'repo-2',
-                ninja: true,
-                user: 'me',
-                uuid: 1
-            }
-        });
-
         httpBackend.flush();
-        scope.repos.length.should.be.exactly(1);
+        
+        scope.repos.length.should.be.exactly(2);
     });
 
 
