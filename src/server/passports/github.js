@@ -18,7 +18,6 @@ passport.use(new Strategy({
             uuid: profile.id
         }, {
             name: profile.username,
-            email: '', // needs fix
             token: accessToken
         }, {
             upsert: true

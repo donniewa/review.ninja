@@ -27,29 +27,33 @@ router.all('/*', function(req, res) {
         models.User.findOne({
             uuid: req.user.id
         }, function(err, user) {
-            if(user.terms === config.terms) {
-                res.sendfile('home.html', {root: __dirname + './../../client'});
-            } else {
-                request(config.terms, function(err, response, rawGist) {
-                    github.call({
-                        obj: 'markdown',
-                        fun: 'render',
-                        arg: {
-                            text: rawGist
-                        },
-                        token: user.token
-                    }, function(err, renderedHtml) {
-                        var template = fs.readFileSync('src/server/templates/terms.ejs', 'utf-8');
-                        res.send(ejs.render(template, {termsHtml: renderedHtml.data}));
-                    });
-                });
-            }
-        });
-        return;
-    }
 
-    req.session.next = req.url;
-    res.sendfile('login.html', {root: __dirname + './../../client'});
+            if(!user) {
+                req.logout();
+                return res.sendFile('login.html', {root: __dirname + './../../client'});
+            }
+
+            if(!config.terms || user.terms===config.terms) {
+                return res.sendFile('home.html', {root: __dirname + './../../client'});
+            }
+
+            request(config.terms, function(err, response, rawGist) {
+                github.call({
+                    obj: 'markdown',
+                    fun: 'render',
+                    arg: {
+                        text: rawGist
+                    },
+                    token: user.token
+                }, function(err, renderedHtml) {
+                    var template = fs.readFileSync('src/server/templates/terms.ejs', 'utf-8');
+                    res.send(ejs.render(template, {termsHtml: renderedHtml.data}));
+                });
+            });
+        });
+    } else {
+        res.sendFile('login.html', {root: __dirname + './../../client'});
+    }
 });
 
 module.exports = router;
