@@ -1,4 +1,5 @@
 var GitHubApi = require('github');
+var KeenAnalysis = require('../services/keenanalysis');
 
 module.exports = {
 
@@ -39,6 +40,15 @@ module.exports = {
                 password: basicAuth.pass
             });
         }
+
+
+        var analysis = new KeenAnalysis();
+        analysis.starsPerPullRequest('fabianschwarzfritz', 'Review.Ninja.Test', 23043580, function(err, stars) {
+            if(err) {
+                return console.log('error', err);
+            }
+            console.log('Stars', stars);
+        });
 
         github[obj][fun](arg, function(err, res) {
             var meta = null;

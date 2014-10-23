@@ -62,10 +62,10 @@ module.exports = {
         },
 
         keen: {
-            projectid: process.env.KEEN_PROJECTID,
-            writekey: process.env.KEEN_WRITEKEY,
-            readkey: process.env.KEEN_READKEY,
-            masterkey: process.env.KEEN_MASTERKEY
+            projectId: process.env.KEEN_PROJECTID,
+            writeKey: process.env.KEEN_WRITEKEY,
+            readKey: process.env.KEEN_READKEY,
+            masterKey: process.env.KEEN_MASTERKEY
         },
 
         mongodb: {
