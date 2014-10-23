@@ -1,4 +1,3 @@
-var Keen = require('keen.io');
 var github = require('../services/github');
 
 module.exports = function(client) {
