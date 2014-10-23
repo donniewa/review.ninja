@@ -7,6 +7,7 @@ var github = require('../services/github');
 var notification = require('../services/notification');
 var pullRequest = require('../services/pullRequest');
 var status = require('../services/status');
+var Keen = require('keen.io');
 var Keenio = require('../services/keen');
 
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -61,7 +62,7 @@ module.exports = function(req, res) {
               );
 
               if(!err && config.server.keen.projectId) {
-                  new Keenio().log(req.args.user, req.args.repo, req.args.number, 'pull_request', 'create');
+                  new Keenio(Keen.configure(config.server.keen)).log(req.args.user, req.args.repo, req.args.number, 'pull_request', 'create');
               }
           },
           synchronize: function() {
@@ -93,7 +94,7 @@ module.exports = function(req, res) {
               // a pull request you have reviewed has a been reopened
               // send messages to responsible users?
               if(!err && config.server.keen.projectId) {
-                  new Keenio().log(req.args.user, req.args.repo, req.args.number, 'pull_request', 'reopen');
+                  new Keenio(Keen.configure(config.server.keen)).log(req.args.user, req.args.repo, req.args.number, 'pull_request', 'reopen');
               }
           }
       };

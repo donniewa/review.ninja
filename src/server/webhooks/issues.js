@@ -7,6 +7,7 @@ var github = require('../services/github');
 var notification = require('../services/notification');
 var status = require('../services/status');
 var pullRequest = require('../services/pullRequest');
+var Keen = require('keen.io');
 var Keenio = require('../services/keen');
 var config = require('../../config');
 
@@ -79,7 +80,7 @@ module.exports = function(req, res) {
                         });
                         notification.sendmail('new_issue', req.args.repository.owner.login, req.args.repository.name, req.args.repository.id, user.token, pull_request_number, args);
                         if(config.server.keen.projectId) {
-                            new Keenio().log(req.args.user, req.args.repo, req.args.number, 'issue', 'open');
+                            new Keenio(Keen.configure(config.server.keen)).log(req.args.user, req.args.repo, req.args.number, 'issue', 'open');
                         }
                     });
                 }
@@ -110,7 +111,7 @@ module.exports = function(req, res) {
                             notification.sendmail('closed_issue', req.args.repository.owner.login, req.args.repository.name, req.args.repository.id, user.token, pull_request_number, args);
 
                             if(config.server.keen.projectId) {
-                                new Keenio().log(req.args.user, req.args.repo, req.args.number, 'issue', 'close');
+                                new Keenio(Keen.configure(config.server.keen)).log(req.args.user, req.args.repo, req.args.number, 'issue', 'close');
                             }
                         });
 
@@ -124,7 +125,7 @@ module.exports = function(req, res) {
                 // (logic belongs in notification service)
 
                 if(config.server.keen.projectId) {
-                    new Keenio().log(req.args.user, req.args.repo, req.args.number, 'issue', 'reopened');
+                    new Keenio(Keen.configure(config.server.keen)).log(req.args.user, req.args.repo, req.args.number, 'issue', 'reopened');
                 }
             }
         };

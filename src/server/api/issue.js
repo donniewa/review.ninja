@@ -1,6 +1,7 @@
 // module
 var github = require('../services/github');
 var url = require('../services/url');
+var Keen = require('keen.io');
 var Keenio = require('../services/keen');
 var config = require('../../config');
 
