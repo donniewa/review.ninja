@@ -5,7 +5,7 @@ module.exports = {
         // models
         var Milestone = require('mongoose').model('Milestone');
 
-        var data = {action: args.action};
+        var data = {action: args.action || 'default'};
         var room = args.repository.owner.login + ':' + args.repository.name + ':' + event;
 
         var events = {
