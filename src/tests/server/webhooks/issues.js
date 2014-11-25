@@ -5,11 +5,7 @@ var sinon = require('sinon');
 // config
 global.config = require('../../../config');
 
-// io
-global.io = {emit: function() {}};
-
 // documents
-var User = require('../../../server/documents/user').User;
 var Milestone = require('../../../server/documents/milestone').Milestone;
 
 // webhooks
@@ -23,40 +19,14 @@ var pullRequest = require('../../../server/services/pullRequest');
 var notification = require('../../../server/services/notification');
 
 describe('issue', function(done) {
-    it('should exit silently if user not found', function(done) {
-        var req = {
-            params: {id: 123456},
-            args: require('../../fixtures/webhooks/issues/closed.json')
-        };
-
-        var userStub = sinon.stub(User, 'findOne', function(args, done) {
-            assert.equal(args._id, 123456);
-            done(null, null);
-        });
-
-        issues(req, {
-            status: function(code) {
-                assert.equal(code, 404);
-                return this;
-            },
-            send: function(msg) {
-                assert.equal(msg, 'User not found');
-                userStub.restore();
-                done();
-            }
-        });
-    });
 
     it('should exit silently if milestone not found', function(done) {
         var req = {
-            params: {id: 123456},
-            args: require('../../fixtures/webhooks/issues/closed.json')
+            args: {
+                payload: require('../../fixtures/webhooks/issues/closed.json'),
+                config: {token: 'token'}
+            }
         };
-
-        var userStub = sinon.stub(User, 'findOne', function(args, done) {
-            assert.equal(args._id, 123456);
-            done(null, {});
-        });
 
         var milestoneStub = sinon.stub(Milestone, 'findOne', function(args, done) {
             assert.deepEqual(args, {
@@ -73,7 +43,6 @@ describe('issue', function(done) {
             },
             send: function(msg) {
                 assert.equal(msg, 'Milestone not found');
-                userStub.restore();
                 milestoneStub.restore();
                 done();
             }
@@ -84,14 +53,11 @@ describe('issue', function(done) {
 describe('issue:opened', function(done) {
     it('should set status and send notification', function(done) {
         var req = {
-            params: {id: 123456},
-            args: require('../../fixtures/webhooks/issues/opened.json')
+            args: {
+                payload: require('../../fixtures/webhooks/issues/opened.json'),
+                config: {token: 'token'}
+            }
         };
-
-        var userStub = sinon.stub(User, 'findOne', function(args, done) {
-            assert.equal(args._id, 123456);
-            done(null, {token: 'token'});
-        });
 
         var milestoneStub = sinon.stub(Milestone, 'findOne', function(args, done) {
             assert.deepEqual(args, {
@@ -150,7 +116,6 @@ describe('issue:opened', function(done) {
 
         issues(req, {
             end: function() {
-                userStub.restore();
                 milestoneStub.restore();
                 githubStub.restore();
                 statusStub.restore();
@@ -164,14 +129,11 @@ describe('issue:opened', function(done) {
 describe('issue:closed', function(done) {
     it('should set status and send notification', function(done) {
         var req = {
-            params: {id: 123456},
-            args: require('../../fixtures/webhooks/issues/closed.json')
+            args: {
+                payload: require('../../fixtures/webhooks/issues/closed.json'),
+                config: {token: 'token'}
+            }
         };
-
-        var userStub = sinon.stub(User, 'findOne', function(args, done) {
-            assert.equal(args._id, 123456);
-            done(null, {token: 'token'});
-        });
 
         var milestoneStub = sinon.stub(Milestone, 'findOne', function(args, done) {
             assert.deepEqual(args, {
@@ -249,7 +211,6 @@ describe('issue:closed', function(done) {
 
         issues(req, {
             end: function() {
-                userStub.restore();
                 milestoneStub.restore();
                 githubStub.restore();
                 statusStub.restore();
@@ -261,14 +222,11 @@ describe('issue:closed', function(done) {
 
     it('should set status but not send a notification (still open issues)', function(done) {
         var req = {
-            params: {id: 123456},
-            args: require('../../fixtures/webhooks/issues/closed.json')
+            args: {
+                payload: require('../../fixtures/webhooks/issues/closed.json'),
+                config: {token: 'token'}
+            }
         };
-
-        var userStub = sinon.stub(User, 'findOne', function(args, done) {
-            assert.equal(args._id, 123456);
-            done(null, {token: 'token'});
-        });
 
         var milestoneStub = sinon.stub(Milestone, 'findOne', function(args, done) {
             assert.deepEqual(args, {
@@ -334,7 +292,6 @@ describe('issue:closed', function(done) {
         issues(req, {
             end: function() {
                 assert(notificationSpy.notCalled);
-                userStub.restore();
                 milestoneStub.restore();
                 githubStub.restore();
                 statusStub.restore();
