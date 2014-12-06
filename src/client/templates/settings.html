@@ -1,0 +1,85 @@
+<div class="row">
+  <div class="settings col-md-8 col-md-offset-2">
+
+    <div class="row">
+      <div class="col-md-12">
+
+        <ol class="breadcrumb">
+          <li><a ui-sref="repo.master()">{{ repo.value.owner.login }} / {{ repo.value.name }}</a></li>
+        </ol>
+        
+        <h2><span class="mega-octicon octicon-gear"></span> Settings</h2>
+
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+
+            <h3>Email notifications</h3>
+
+            <label>Email me about</label>
+
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" ng-model="settings.value.notifications.pull_request" ng-change="setNotifications()" /> Pull Requests
+              </label>
+            </div>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" ng-model="settings.value.notifications.issue" ng-change="setNotifications()" /> Issues
+              </label>
+            </div>
+            <div class="checkbox" style="margin-bottom:20px;">
+              <label>
+                <input type="checkbox" ng-model="settings.value.notifications.star" ng-change="setNotifications()" /> Ninja stars
+              </label>
+            </div>
+            
+            <label>Watched branches <i class="fa fa-lg fa-plus-circle text-primary" ng-click="show=true; setFocus=true;"></i></label>
+
+            <a target="_blank" href="http://docs.review.ninja/quickstart/#configuration">
+              <span class="fa-stack pull-right">
+                <i class="fa fa-circle fa-lg fa-stack-1x text-info"></i>
+                <i class="fa fa-info fa-stack-1x text-primary" style="font-size: 12px;"></i>
+              </span>
+            </a>
+
+            <div class="well" ng-show="show">
+              <form role="form" ng-submit="addWatch(newWatch)" style="margin:0;">
+                <div class="form-group">
+                  <label>Branch pattern</label>
+                  <input ng-model="newWatch" focus="setFocus" class="form-control" placeholder="eg. feature/*" />
+                </div>
+
+                <i class="fa fa-2x fa-spinner fa-spin" ng-show="set.loading" style="margin-left:5px;"></i>
+                <div class="pull-right">
+                  <button type="button" class="btn btn-info" ng-click="show=false">Close</button>
+                  <button type="submit" class="btn btn-primary" ng-disabled="!newWatch.length">Add</button>
+                </div>
+                <div style="clear:both;"></div>
+              </form>
+            </div>
+
+            <p ng-show="!show && !settings.value.watched.length">
+              Add branch patterns to tell ReviewNinja which branches you want to focus on.
+            </p>
+
+            <table class="table table-hover" ng-show="settings.value.watched.length">
+              <tr ng-repeat="watched in settings.value.watched">
+                <td><i class="fa fa-bullseye"></i>&nbsp; {{ watched }}</td>
+                <td style="text-align:right;">
+                  <i class="fa fa-times" 
+                     ng-click="removeWatch(watched)" 
+                     tooltip-placement="bottom" 
+                     tooltip="Remove">
+                  </i>
+                </td>
+              </tr>
+            </table>
+
+      </div>
+    </div>
+
+  </div>
+</div>
