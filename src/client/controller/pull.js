@@ -23,11 +23,6 @@ module.controller('PullCtrl', ['$scope', '$rootScope', '$state', '$stateParams',
         // set the line selection
         $scope.reference = {selection: {}, issues: null};
 
-        // attach params to scope to access them in template
-        $scope.user = $stateParams.user;
-        $scope.repo = $stateParams.repo;
-        $scope.number = $stateParams.number;
-
         // get the combined statuses
         $scope.status = $HUB.call('statuses', 'getCombined', {
             user: $stateParams.user,
