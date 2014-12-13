@@ -18,7 +18,7 @@ module.controller('PullCtrl', ['$scope', '$rootScope', '$state', '$stateParams',
         $scope.head = pull.value.head.sha;
 
         // get the pull request
-        $scope.pull = Pull.milestone(pull.value) && Pull.render(pull.value) && Pull.stars(pull.value);
+        $scope.pull = Pull.milestone(pull.value) && Pull.render(pull.value) && Pull.stars(pull.value) && Pull.threshold(pull.value);
 
         // set the line selection
         $scope.reference = {selection: {}, issues: null};
@@ -143,7 +143,7 @@ module.controller('PullCtrl', ['$scope', '$rootScope', '$state', '$stateParams',
                         $scope.compComm($scope.base, pull.value.head.sha);
                     }
 
-                    $scope.pull = Pull.milestone(pull.value) && Pull.render(pull.value) && Pull.stars(pull.value);
+                    $scope.pull = Pull.milestone(pull.value) && Pull.render(pull.value) && Pull.stars(pull.value) && Pull.threshold(pull.value);
                 }
             });
         };

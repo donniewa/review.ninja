@@ -57,6 +57,18 @@ module.factory('Pull', ['$HUB', '$RPC', '$stateParams', function($HUB, $RPC, $st
             });
 
             return pull;
+        },
+
+        threshold: function(pull) {
+            $RPC.call('star', 'threshold', {
+                sha: pull.head.sha,
+                repo_uuid: pull.base.repo.id
+            }, function(err, threshold) {
+                if(!err) {
+                    pull.threshold = threshold.value;
+                }
+            });
+            return pull;
         }
     };
 }]);

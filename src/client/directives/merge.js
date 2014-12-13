@@ -60,6 +60,10 @@ module.directive('mergeButton', ['$HUB', '$stateParams', '$timeout', function($H
                 });
             };
 
+            scope.mergeable = function() {
+                return scope.pull.threshold <= scope.pull.stars.length && scope.pull.mergeable;
+            };
+
             scope.merge = function() {
                 scope.merging = $HUB.call('pullRequests', 'merge', {
                     user: $stateParams.user,

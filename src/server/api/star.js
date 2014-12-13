@@ -98,5 +98,18 @@ module.exports = {
 
             star.remove(req.args.sha, req.args.user, req.args.repo, req.args.repo_uuid, req.args.number, req.user, req.user.token, done);
         });
+    },
+
+    /************************************************************************************************************
+
+    @models
+
+    + Star sha: sha, repo_uuid: repo_uuid
+
+    ************************************************************************************************************/
+
+    threshold: function(req, done) {
+        // Get the threshold by fetching .ninja file of the head commit and read the threshold value in config.
+        done(null, 1);
     }
 };

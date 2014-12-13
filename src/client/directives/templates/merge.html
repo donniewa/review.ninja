@@ -4,7 +4,7 @@
             'text-warning': status.state==='pending' && !pull.merged,
             'text-danger':  status.state==='failure' && !pull.merged,
             'text-merged':  pull.merged,
-            'disabled': !pull.mergeable
+            'disabled': !mergeable()
           }">
 
   <div ng-show="pull.merged && branch">
@@ -28,7 +28,7 @@
     <p ng-show="status.state==='success' || status.state==='pending'">
       {{ (pull.stars.length || 0) | pluralize:'ninja star' }}
     </p>
-    <small ng-show="!pull.mergeable">
+    <small ng-show="!mergeable()">
       Pull Request <a ng-href="{{ pull.html_url }}" class="link-external" target="_blank">#{{ pull.number }}</a> can't be merged automatically.
     </small>
   </div>
@@ -41,7 +41,7 @@
             'btn-danger':  status.state==='failure' && !pull.merged,
             'btn-merged':  pull.merged
           }"
-          ng-disabled="!pull.mergeable" 
+          ng-disabled="!mergeable()" 
           ng-click="merge()">
 
     <span ng-show="!pull.merged">
