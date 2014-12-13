@@ -110,6 +110,20 @@ module.exports = {
 
     threshold: function(req, done) {
         // Get the threshold by fetching .ninja file of the head commit and read the threshold value in config.
-        done(null, 1);
+        github.call({
+            obj: 'repos',
+            fun: 'getContent',
+            arg: {
+                repo: req.args.repo_uuid,
+                path: '.ninja',
+                ref: 'heads' + req.args.sha
+            },
+            token: req.user.token
+        }, function(err, file) {
+            if(!err) {
+                // TODO: Process file, read out config value and return it
+                done(null, 1);
+            }
+        });
     }
 };
