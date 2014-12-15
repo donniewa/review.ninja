@@ -28,9 +28,11 @@ module.exports = {
         }, function(err, file) {
             var ninja;
             try {
-                var ninjafile = new Buffer(file.content, 'base64').toString('ascii');
-                ninja = JSON.parse(ninjafile);
-            } catch(ex) {}
+                ninja = new Buffer(file.content, 'base64').toString('ascii');
+                ninja = JSON.parse(ninja);
+            } catch(ex) {
+                console.log('ex', ex);
+            }
             done(err, ninja);
         });
     }
