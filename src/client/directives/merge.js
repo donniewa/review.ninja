@@ -61,7 +61,10 @@ module.directive('mergeButton', ['$HUB', '$stateParams', '$timeout', function($H
             };
 
             scope.mergeable = function() {
-                return scope.pull.ninjafile.threshold <= scope.pull.stars.length && scope.pull.mergeable;
+                if(scope.pull.ninjafile) {
+                    return scope.pull.ninjafile.threshold <= scope.pull.stars.length && scope.pull.mergeable;
+                }
+                return true;
             };
 
             scope.merge = function() {
