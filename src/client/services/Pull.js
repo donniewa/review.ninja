@@ -61,8 +61,9 @@ module.factory('Pull', ['$HUB', '$RPC', '$stateParams', function($HUB, $RPC, $st
 
         threshold: function(pull) {
             $RPC.call('star', 'threshold', {
-                sha: pull.head.sha,
-                repo_uuid: pull.base.repo.id
+                user: pull.base.user.login,
+                repo: pull.base.repo.name,
+                ref: pull.base.ref
             }, function(err, threshold) {
                 if(!err) {
                     pull.threshold = threshold.value;
