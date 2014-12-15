@@ -123,15 +123,16 @@ module.exports = {
             if(!err) {
                 // TODO: Process file, read out config value and return it
                 var lines = file.match(/[^\r\n]+/g);
-                lines.forEach(function(line) {
-                    var value = line.split(':');
+                for (var i = 0; i < lines.length; i++) {
+                    var value = lines[i].split(':');
                     var key = value.shift();
                     if(key === 'ninjastar-threshold') {
                         var threshold = value[0].trim();
-                        done(null, threshold);
+                        return done(null, threshold);
                     }
-                });
+                }
             }
+            return done(null, 0);
         });
     }
 };
