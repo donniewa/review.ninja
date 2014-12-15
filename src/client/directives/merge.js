@@ -47,6 +47,29 @@ module.directive('mergeButton', ['$HUB', '$stateParams', '$timeout', function($H
                 };
             });
 
+            var reviewed = function(ninjafile) {
+                if(ninjafile.mandatory) {
+                    var reviewed = new Array(ninjafile.mandatory.length);
+                    var starnames = scope.pull.stars.map(function(star) {
+                        return star.name;
+                    });
+                    for (var i = 0; i < ninjafile.mandatory.length; i++) {
+                        var mandatory = ninjafile.mandatory[i];
+                        reviewed[i] = starnames.indexOf(mandatory) !== -1;
+                    }
+                    return reviewed.indexOf(false) !== -1;
+                }
+                return true;
+            };
+
+            var threshold = function(ninjafile) {
+                if(ninjafile.threshold) {
+                    return ninjafile.threshold <= scope.pull.stars.length
+                        && scope.pull.mergeable;
+                }
+                return true;
+            };
+
             scope.deleteBranch = function() {
                 scope.showConfirmation = false;
                 $HUB.call('gitdata', 'deleteReference', {
@@ -62,7 +85,8 @@ module.directive('mergeButton', ['$HUB', '$stateParams', '$timeout', function($H
 
             scope.mergeable = function() {
                 if(scope.pull.ninjafile) {
-                    return scope.pull.ninjafile.threshold <= scope.pull.stars.length && scope.pull.mergeable;
+                    return reviewed(scope.pull.ninjafile)
+                        && threshold(scope.pull.ninjafile);
                 }
                 return true;
             };
