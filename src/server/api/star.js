@@ -109,23 +109,25 @@ module.exports = {
     ************************************************************************************************************/
 
     threshold: function(req, done) {
-        // Get the threshold by fetching .ninja file of the head commit and read the threshold value in config.
         github.call({
             obj: 'repos',
             fun: 'getContent',
             arg: {
-                repo: req.args.repo_uuid,
+                user: 'fabianschwarzfritz',
+                repo: 'Review.Ninja.Test',
                 path: '.ninja',
-                ref: 'heads' + req.args.sha
+                ref: 'ninja'
             },
             token: req.user.token
         }, function(err, file) {
-            if(!err) {
-                // TODO: Process file, read out config value and return it
-                var lines = file.match(/[^\r\n]+/g);
+            if(!err && file) {
+                var encoded = new Buffer(file.content, 'base64').toString('ascii');
+                var lines = encoded.match(/[^\r\n]+/g);
+
                 for (var i = 0; i < lines.length; i++) {
-                    var value = lines[i].split(':');
-                    var key = value.shift();
+                    var arr = lines[i].split('=');
+                    var key = arr.shift();
+                    var value = arr.join();
                     if(key === 'ninjastar-threshold') {
                         var threshold = value[0].trim();
                         return done(null, threshold);
