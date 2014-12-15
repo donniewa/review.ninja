@@ -1,3 +1,6 @@
+// libraries
+var merge = require('merge');
+
 // models
 var Star = require('mongoose').model('Star');
 
@@ -112,24 +115,20 @@ module.exports = {
         github.call({
             obj: 'repos',
             fun: 'getContent',
-            arg: {
-                user: 'fabianschwarzfritz',
-                repo: 'Review.Ninja.Test',
-                path: '.ninja',
-                ref: 'ninja'
-            },
+            arg: merge(req.args, {
+                path: '.ninja'
+            }),
             token: req.user.token
         }, function(err, file) {
             if(!err && file) {
                 var encoded = new Buffer(file.content, 'base64').toString('ascii');
                 var lines = encoded.match(/[^\r\n]+/g);
-
                 for (var i = 0; i < lines.length; i++) {
                     var arr = lines[i].split('=');
                     var key = arr.shift();
                     var value = arr.join();
                     if(key === 'ninjastar-threshold') {
-                        var threshold = value[0].trim();
+                        var threshold = value.trim();
                         return done(null, threshold);
                     }
                 }
