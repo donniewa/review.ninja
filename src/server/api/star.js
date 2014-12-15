@@ -1,6 +1,3 @@
-// libraries
-var merge = require('merge');
-
 // models
 var Star = require('mongoose').model('Star');
 
@@ -100,40 +97,6 @@ module.exports = {
             }
 
             star.remove(req.args.sha, req.args.user, req.args.repo, req.args.repo_uuid, req.args.number, req.user, req.user.token, done);
-        });
-    },
-
-    /************************************************************************************************************
-
-    @models
-
-    + Star sha: sha, repo_uuid: repo_uuid
-
-    ************************************************************************************************************/
-
-    threshold: function(req, done) {
-        github.call({
-            obj: 'repos',
-            fun: 'getContent',
-            arg: merge(req.args, {
-                path: '.ninja'
-            }),
-            token: req.user.token
-        }, function(err, file) {
-            if(!err && file) {
-                var encoded = new Buffer(file.content, 'base64').toString('ascii');
-                var lines = encoded.match(/[^\r\n]+/g);
-                for (var i = 0; i < lines.length; i++) {
-                    var arr = lines[i].split('=');
-                    var key = arr.shift();
-                    var value = arr.join();
-                    if(key === 'ninjastar-threshold') {
-                        var threshold = value.trim();
-                        return done(null, threshold);
-                    }
-                }
-            }
-            return done(null, 0);
         });
     }
 };

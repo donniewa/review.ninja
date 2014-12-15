@@ -59,14 +59,14 @@ module.factory('Pull', ['$HUB', '$RPC', '$stateParams', function($HUB, $RPC, $st
             return pull;
         },
 
-        threshold: function(pull) {
-            $RPC.call('star', 'threshold', {
+        ninja: function(pull) {
+            $RPC.call('ninja', 'get', {
                 user: pull.head.user.login,
                 repo: pull.head.repo.name,
                 ref: pull.head.ref
-            }, function(err, threshold) {
+            }, function(err, ninja) {
                 if(!err) {
-                    pull.threshold = threshold.value;
+                    pull.ninjafile = ninja.value;
                 }
             });
             return pull;
